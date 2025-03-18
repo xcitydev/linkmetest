@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import TaskRow from "./TaskRow";
@@ -10,6 +10,7 @@ import { useAuth } from "./ContextProvider";
 import { PasswordReset } from "./PasswordReset";
 import { DoorOpen } from "lucide-react";
 import Loader from "./Loader";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -24,14 +25,28 @@ const Dashboard = () => {
   const { logout, user } = useAuth();
 
   async function getTasks() {
-    const response = await fetch("http://localhost:3000/api/tasks", {
-      method: "GET",
-      credentials: "include", // Include cookies (JWT token)
-    });
-    const data = await response.json();
-    console.log("Get Tasks Response:", data);
-    setTasks(data);
-    setFilteredTasks(data);
+   try{
+     const response = await fetch("http://localhost:3000/api/tasks", {
+       method: "GET",
+       credentials: "include", // Include cookies (JWT token)
+     });
+     const data = await response.json();
+     console.log("Get Tasks Response:", data);
+     if(response.ok){
+      setTasks(data);
+      setFilteredTasks(data);
+     }else{
+      toast("Error fetching tasks", {
+        description: `${data?.error}`,
+      });
+      if (data?.error === "Please authenticate") {
+        logout();
+        router.push("/login");
+      }
+     }
+   }catch(error){
+    console.log(error)
+   }
   }
 
   const handleTagChange = (tag: string) => {
@@ -100,9 +115,9 @@ const Dashboard = () => {
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
   const currentTasks = filteredTasks.slice(indexOfFirstTask, indexOfLastTask);
 
-  const style = `col-span-1 flex items-center justify-center sm:h-[10rem] h-[4rem] rounded-md text-white`;
+  const style = `col-span-1 flex items-center justify-center sm:h-[10rem] h-[2.5rem] rounded-md text-white`;
   return (
-    <div className="h-screen p-6 max-w-7xl mx-auto py-14 overflow-y-hidden">
+    <div className="h-screen p-6 max-w-7xl mx-auto sm:py-14 overflow-y-hidden">
       <div className="flex justify-end px-4 gap-4 items-center">
         <PasswordReset />
         <Button onClick={logoutUser}>
@@ -133,7 +148,7 @@ const Dashboard = () => {
               className="max-w-2xl text-sm"
             />
           </div>
-          <div className="flex gap-4 mb-4 flex-wrap">
+          <div className="flex gap-4 sm:mb-4 flex-wrap">
             {["work", "school", "tech", "play"].map((tag) => (
               <label key={tag} className="flex items-center">
                 <input
@@ -150,7 +165,7 @@ const Dashboard = () => {
         </div>
         <div className="flex flex-col gap-2 pt-4">
           <div className="grid-cols-1 sm:grid-cols-15 text-sm font-semibold py-4 mt-3 px-4 text-center hidden sm:grid">
-            <p className="col-span-3"> Name</p>
+            <p className="col-span-3">Name</p>
             <p className="col-span-5">Description</p>
             <p className="col-span-1">Status</p>
             <p className="col-span-2">Priority</p>
@@ -158,7 +173,7 @@ const Dashboard = () => {
             <p className="col-span-2">Actions</p>
           </div>
           <div className="flex flex-col gap-2 mb-4">
-            <div className=" overflow-y-scroll sm:overflow-hidden h-[40rem] sm:h-auto">
+            <div className=" overflow-y-scroll sm:overflow-hidden h-[40%] sm:h-auto">
               {loading && <Loader />}
 
               {!loading &&
