@@ -24,8 +24,6 @@ const login = async (req, res) => {
       return res.status(400).send({ error: "User not found" });
     }
 
-    console.log(user.password);
-    console.log(password);
 
     const isMatch = await bcrypt.compare(password, user.password); //await user.comparePassword(password);
     console.log(isMatch);
@@ -111,25 +109,6 @@ const resetPassword = async (req, res) => {
   }
 };
 
-// const resetPassword = async (req, res) => {
-//   const { token } = req.params;
-//   const { password } = req.body;
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     const user = await User.findById(decoded._id);
-//     if (!user) {
-//       return res.status(404).send({ error: "User not found" });
-//     }
-
-//     const pWorld = await bcrypt.hash(password, 8);
-//     user.password = pWorld;
-//     await user.save();
-//     res.send({ message: "Password has been reset successfully." });
-//   } catch (err) {
-//     res.status(400).send({ error: "Invalid or expired token" });
-//   }
-// };
 
 // Function to send email
 const sendResetEmail = async (email, token) => {
@@ -140,16 +119,14 @@ const sendResetEmail = async (email, token) => {
       pass: process.env.EMAIL_PASS, 
     },
   });
-  console.log(transporter);
   const resetLink = `http://localhost:3001/reset-password/${token}`; // Adjust the URL as needed
-  console.log(resetLink);
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Password Reset",
     text: `Click the link to reset your password: ${resetLink}`,
   };
-  console.log(mailOptions);
   await transporter.sendMail(mailOptions);
 };
 
