@@ -20,29 +20,24 @@ const createTask = async (req, res) => {
 };
 
 const updateTask = async (req, res) => {
-  const updates = Object.keys(req.body);
-  const allowedUpdates = ["description", "completed", "name", "priority"];
-  const isValidOperation = updates.every((update) =>
-    allowedUpdates.includes(update)
-  );
-
-  if (!isValidOperation) {
-    return res.status(400).send({ error: "Invalid updates" });
-  }
-
+  console.log("here");
   try {
     const task = await Task.findOne({
       _id: req.params.id,
       owner: req.user._id,
     });
+
     if (!task) {
       return res.status(404).send({ error: "Task not found" });
     }
 
-    updates.forEach((update) => (task[update] = req.body[update]));
+    // Directly set completed to true
+    task.completed = true;
+
     await task.save();
     res.send(task);
   } catch (err) {
+    console.error("Error updating task:", err); // Log the error for debugging
     res.status(400).send({ error: "Failed to update task" });
   }
 };

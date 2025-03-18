@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get("/tasks", auth, getTasks);
 router.post("/tasks", auth, validateTask, createTask);
-router.put("/tasks/:id", auth, updateTask);
+router.patch("/tasks/:id", auth, updateTask);
 router.delete("/tasks/:id", auth, deleteTask);
 
 module.exports = router;
