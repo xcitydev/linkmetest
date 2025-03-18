@@ -55,7 +55,6 @@ export default function Login() {
         position: "bottom-right",
       });
       const message = await response.json();
-      console.log("message", message);
       login(message.user?.id);
       router.push("/dashboard");
     } catch (err) {
@@ -64,7 +63,6 @@ export default function Login() {
   }
 
   const onSubmit = (data: any) => {
-    console.log(data);
     loginUser(data.email, data.password);
   };
 

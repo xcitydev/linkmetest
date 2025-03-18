@@ -61,7 +61,6 @@ export default function SignUpPage() {
   }
 
   const onSubmit = (data: any) => {
-    console.log(data);
     signupUser(data.email, data.password);
     // Handle successful sign-up (e.g., API call)
   };

@@ -173,7 +173,7 @@ const Dashboard = () => {
             <p className="col-span-2">Actions</p>
           </div>
           <div className="flex flex-col gap-2 mb-4">
-            <div className=" overflow-y-scroll sm:overflow-hidden h-[40%] sm:h-auto">
+            <div className=" overflow-y-scroll sm:overflow-hidden h-[48vh] sm:h-auto">
               {loading && <Loader />}
 
               {!loading &&

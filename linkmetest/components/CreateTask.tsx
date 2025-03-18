@@ -15,7 +15,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 interface CreateTaskProps {
-  addTask: (task: any) => void; 
+  addTask: (task: any) => void;
 }
 
 export function CreateTask({ addTask }: CreateTaskProps) {
@@ -25,9 +25,11 @@ export function CreateTask({ addTask }: CreateTaskProps) {
     priority: "",
     tags: [] as string[],
   });
-  const [dialogOpen, setDialogOpen] = useState(false); 
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -38,51 +40,50 @@ export function CreateTask({ addTask }: CreateTaskProps) {
   const handleTagChange = (tag: string) => {
     setFormData((prev) => {
       if (prev.tags.includes(tag)) {
-        return { ...prev, tags: prev.tags.filter((t) => t !== tag) }; 
+        return { ...prev, tags: prev.tags.filter((t) => t !== tag) };
       } else {
-        return { ...prev, tags: [...prev.tags, tag] }; 
+        return { ...prev, tags: [...prev.tags, tag] };
       }
     });
   };
 
   async function createTask() {
-    try{
-    const response = await fetch("http://localhost:3000/api/tasks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-      credentials: "include", // Include cookies (JWT token)
-    });
-    const data = await response.json();
-    if(response.ok){
-      toast("Task created successfully", {
-        description: "Please wait while we redirect you",
-        duration: 3000,
-        position: "bottom-right",
+    try {
+      const response = await fetch("http://localhost:3000/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include", // Include cookies (JWT token)
       });
-      console.log("Create Task Response:", data);
-      addTask(data); 
-    }else{
-        toast("Task creation failed", {
-            description: "Please try again",
-            duration: 3000,
-            position: "bottom-right",
+      const data = await response.json();
+      if (response.ok) {
+        toast("Task created successfully", {
+          description: "Please wait while we redirect you",
+          duration: 3000,
+          position: "bottom-right",
         });
-    }
+        console.log("Create Task Response:", data);
+        addTask(data);
+      } else {
+        toast("Task creation failed", {
+          description: "Please try again",
+          duration: 3000,
+          position: "bottom-right",
+        });
+      }
 
-    // Reset state
-    setFormData({
-      name: "",
-      description: "",
-      priority: "",
-      tags: [],
-    });
-    setDialogOpen(false); 
-    }catch(error){
-        console.error("Error creating task:", error);
+      // Reset state
+      setFormData({
+        name: "",
+        description: "",
+        priority: "",
+        tags: [],
+      });
+      setDialogOpen(false);
+    } catch (error) {
+      console.error("Error creating task:", error);
     }
-  } 
-
+  }
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -125,13 +126,17 @@ export function CreateTask({ addTask }: CreateTaskProps) {
             <Label htmlFor="priority" className="text-right">
               Priority
             </Label>
-            <Input
+            <select
               id="priority"
               name="priority"
               value={formData.priority}
               onChange={handleInputChange}
               className="col-span-3"
-            />
+            >
+              <option value="1" className="text-black">1</option>
+              <option value="2" className="text-black">2</option>
+              <option value="3" className="text-black">3</option>
+            </select>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right">Tags</Label>
