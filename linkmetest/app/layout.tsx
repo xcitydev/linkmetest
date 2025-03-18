@@ -8,9 +8,9 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Amane Soft - Cutting-Edge Software Solutions",
+  title: "TODO APP",
   description:
-    "Amane Soft delivers innovative, high-performance software solutions for businesses of the future.",
+    "A simple todo app to help you manage your tasks",
 };
 
 export default function RootLayout({
