@@ -34,9 +34,6 @@ export default function Hero() {
           Get Started
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
-        <Button variant="outline" size="lg">
-          Learn More
-        </Button>
       </div>
     </section>
   );

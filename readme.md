@@ -69,9 +69,17 @@ cd server
 npm install
 ```
 
-### 4. Configure Environment Variables
+### 4. Configure Environment Variables (Backend)
 ```bash
 cp .env.example .env
+
+PORT
+MONGO_URI
+FRONTEND_URL
+JWT_SECRET
+EMAIL_USER
+EMAIL_PASS
+
 ```
 
 
@@ -86,5 +94,9 @@ pnpm dev
 cd server
 node index.js
 ```
+
+
+note: the application backend is running on port 3000 while the frontend is running on port 3001
+
 
 
